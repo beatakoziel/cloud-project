@@ -1,0 +1,43 @@
+{
+    "_id": "asd1e123daasd",
+    "email": "bkotarski1@gmail.com",
+    "password": "password",
+    "files": [
+        {
+            "_id": "ddasdasd",
+            "name": "images",
+            "type": "dir",
+            "include": [
+                {
+                    "name": "cat",
+                    "type": "jpeg",
+                    "include": null,
+                    "isRemoved:": true,
+                    "isPublic": true
+                },
+                {
+                    "name": "dog",
+                    "type": "png",
+                    "include": null
+                }
+            ]
+        },
+        {
+            "name": "movies",
+            "type": "dir",
+            "include": [
+                {
+                    "name": "Forrest Gump",
+                    "type": "mp4",
+                    "include": null
+                }
+            ]
+        },
+        {
+            "name": "How be normal in 2021",
+            "type": "pdf",
+            "include": null
+        }
+    ]
+
+}

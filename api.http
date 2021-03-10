@@ -1,0 +1,89 @@
+# DEFAULT CLOUD REQUESTS
+
+GET https://localhost:8080/home/Zdjęcia/Artystyczna%20domówka?preview=20130620_192112.jpg HTTP/1.1
+headers: {
+    "Authorization": "Bearer asdasdadwdawd"
+}
+query: {
+    "preview": "20130620_192112.jpg"
+}
+
+GET https://localhost:8080/download/home/Zdjęcia/Artystyczna%20domówka/
+
+
+GET https://localhost:8080/home
+Default 200 response:
+{
+    "data": [
+        {
+        "name": "images",
+        "type": "dir",
+        "include": []
+        },
+        {
+            "name": "movies",
+            "type": "dir",
+            "include": []
+        },
+        {
+            "name": "How be normal in 2021",
+            "type": "pdf",
+            "include": null
+        }
+    ]
+}
+
+POST https://localhost:8080/home
+headers: {
+    "Authorization": "Bearer asdasdadwdawd"
+}
+body: {
+    "location": "/home",
+    "file": "Base64",
+}
+
+
+DELETE https://localhost:8080/home/:id
+headers: {
+    "Authorization": "Bearer asdasdadwdawd"
+}
+
+PUT https://localhost:8080/home/:id
+headers: {
+    "Authorization": "Bearer asdasdadwdawd"
+}
+body: {
+    "location": "/home",
+    "file": "Base64"
+}
+
+PATCH https://localhost:8080/home:id
+headers: {
+    "Authorization": "Bearer asdasdadwdawd"
+}
+body: {
+    "location": "/home",
+    "type": "jpg",
+    "fileName": "test"
+    "newData": {
+        "fileName": "testNew"
+    }
+}
+
+# DEFAULT AUTH REQUESTS
+POST https://localhost:8080/signUp
+body: {
+    "email": "bkotarski1@gmail.com",
+    "password": "password"
+}
+Default 201 response: OK
+
+POST https://localhost:8080/auth
+body: {
+    "email": "bkotarski1@gmail.com",
+    "password": "password"
+}
+Default 200 response:
+{
+    "token": "dasdawawdsasdadwasdawaasd"
+}
