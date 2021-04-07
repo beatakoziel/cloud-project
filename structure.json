@@ -1,42 +1,66 @@
 {
-    "_id": "asd1e123daasd",
-    "email": "bkotarski1@gmail.com",
+    "_id": "0x34",
+    "email": "email@gmail.com",
     "password": "password",
     "files": [
         {
-            "_id": "ddasdasd",
+            "_id": "1x34",
             "name": "images",
             "type": "dir",
             "include": [
                 {
+                    "_id": "2x35",
+                    "name": "cat",
+                    "type": "jpeg",
+                    "include": null,
+                    "isRemoved:": false,
+                    "isPublic": true,
+                    "prev": ["2x36"]
+                },
+                {
+                  	"_id": "2x36",
                     "name": "cat",
                     "type": "jpeg",
                     "include": null,
                     "isRemoved:": true,
-                    "isPublic": true
+                    "isPublic": false,
+                  	"prev": null
                 },
                 {
+                  	"_id": "2x37",
                     "name": "dog",
                     "type": "png",
-                    "include": null
+                    "include": null,
+                    "isRemoved:": false,
+                    "isPublic": false,
+                  	"prev": null
                 }
             ]
         },
         {
+          	"_id": "1x35",
             "name": "movies",
             "type": "dir",
             "include": [
                 {
+                    "_id": "3x35",
                     "name": "Forrest Gump",
                     "type": "mp4",
-                    "include": null
+                    "include": null,
+                    "isRemoved:": false,
+                    "isPublic": false,
+                  	"prev": null
                 }
             ]
         },
         {
+          	"_id": "1x36",
             "name": "How be normal in 2021",
             "type": "pdf",
-            "include": null
+            "include": null,
+            "isRemoved:": false,
+            "isPublic": true,
+            "prev": null
         }
     ]
 
