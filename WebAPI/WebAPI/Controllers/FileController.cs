@@ -4,38 +4,51 @@ using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class FileController : ControllerBase
     {
         private readonly IFileService fileService;
+
         public FileController(IFileService fileService)
         {
             this.fileService = fileService;
         }
+
         [HttpGet("getAllFiles")]
-        public ActionResult GetAllFiles() {
+        public ActionResult GetAllFiles()
+        {
             var data = fileService.GetAllFiles();
             return Ok(data);
         }
+
         [HttpGet("getFileById/{fileId}")]
         public ActionResult GetFileById(string fileId)
         {
             var data = fileService.GetFileById(fileId);
             return Ok(data);
         }
+
+        [HttpGet("test")]
+        public string GetFileById()
+        {
+            return "hello";
+        }
+
         [HttpPost("add")]
         public ActionResult Add(File file)
         {
             fileService.AddFile(file);
             return Ok(true);
         }
+
         [HttpPut("edit")]
         public ActionResult Edit(File file)
         {
             fileService.EditFile(file);
             return Ok(true);
         }
+
         [HttpDelete("delete/{fileId}")]
         public ActionResult delete(string fileId)
         {
