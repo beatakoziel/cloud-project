@@ -4,7 +4,7 @@ using WebAPI.Services;
 
 namespace WebAPI.Controllers
 {
-    [Route("api")]
+    [Route("files")]
     [ApiController]
     public class FileController : ControllerBase
     {
@@ -15,14 +15,14 @@ namespace WebAPI.Controllers
             this.fileService = fileService;
         }
 
-        [HttpGet("getAllFiles")]
+        [HttpGet]
         public ActionResult GetAllFiles()
         {
             var data = fileService.GetAllFiles();
             return Ok(data);
         }
 
-        [HttpGet("getFileById/{fileId}")]
+        [HttpGet("{fileId}")]
         public ActionResult GetFileById(string fileId)
         {
             var data = fileService.GetFileById(fileId);
@@ -30,27 +30,27 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("test")]
-        public string GetFileById()
+        public string Test()
         {
             return "hello";
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         public ActionResult Add(File file)
         {
             fileService.AddFile(file);
             return Ok(true);
         }
 
-        [HttpPut("edit")]
+        [HttpPut]
         public ActionResult Edit(File file)
         {
             fileService.EditFile(file);
             return Ok(true);
         }
 
-        [HttpDelete("delete/{fileId}")]
-        public ActionResult delete(string fileId)
+        [HttpDelete("{fileId}")]
+        public ActionResult Delete(string fileId)
         {
             fileService.DeleteFile(fileId);
             return Ok(true);
