@@ -15,5 +15,7 @@ namespace WebAPI.Models
         public string Type { get; set; }
         [BsonElement("include")]
         public string Include { get; set; }
+        [BsonElement("source")]
+        public string Source { get; set; }
     }
 }
