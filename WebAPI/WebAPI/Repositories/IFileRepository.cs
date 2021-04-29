@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using WebAPI.Models;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Repositories
 {
     public interface IFileRepository
     {
-        List<File> GetAllFiles();
+        List<FileVM> GetAllFiles();
         File GetFileById(string id);
         void AddFile(File data);
         void EditFile(File data);

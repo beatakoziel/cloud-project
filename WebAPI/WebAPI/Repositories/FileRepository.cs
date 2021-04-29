@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WebAPI.Contexts;
 using WebAPI.Models;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Repositories
 {
@@ -14,9 +15,17 @@ namespace WebAPI.Repositories
         {
             _context = new FileContext(settings);
         }
-        public List<File> GetAllFiles()
+        public List<FileVM> GetAllFiles()
         {
-            return _context.Files.Find(x => true).ToList();
+            List<File> files = _context.Files.Find(x => true).ToList();
+            List<FileVM> result = files.Select(x => new FileVM
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Type = x.Type
+            }).ToList();
+
+            return result;
         }
         public File GetFileById(string id)
         {

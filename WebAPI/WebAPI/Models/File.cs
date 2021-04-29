@@ -6,7 +6,7 @@ namespace WebAPI.Models
     public class File
     {
         [BsonId]
-        [BsonElement("id")]
+        [BsonElement("_id")]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [BsonElement("name")]
@@ -15,5 +15,7 @@ namespace WebAPI.Models
         public string Type { get; set; }
         [BsonElement("include")]
         public string Include { get; set; }
+        [BsonElement("source")]
+        public string Source { get; set; }
     }
 }

@@ -5,6 +5,11 @@ const namespaced = true;
 
 const state = {
   filesList: [],
+  file: {
+    name: "",
+    type: "",
+    source: "",
+  },
 };
 
 const getters = {
@@ -24,6 +29,24 @@ const actions = {
     service.getAllFiles().then((response) => {
       commit("SET_FILES_LIST", response.data);
     });
+  },
+  uploadFile: ({ state }) => {
+    service.uploadFile(state.file);
+  },
+  downloadFile: ({ commit }, fileId) => {
+    return new Promise((resolve, reject) => {
+      service
+        .downloadFile(fileId)
+        .then((response) => {
+          resolve(response.data);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  },
+  deleteFile: ({ commit }, fileId) => {
+    service.deleteFile(fileId);
   },
 };
 

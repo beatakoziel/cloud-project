@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using WebAPI.Models;
 using WebAPI.Repositories;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Services
 {
@@ -11,7 +13,7 @@ namespace WebAPI.Services
         {
             this.fileRepository = fileRepository;
         }
-        public List<File> GetAllFiles()
+        public List<FileVM> GetAllFiles()
         {
             return fileRepository.GetAllFiles();
         }
@@ -30,6 +32,13 @@ namespace WebAPI.Services
         public void DeleteFile(string id)
         {
             fileRepository.DeleteFile(id);
+        }
+        public string GetFileSource(string fileId)
+        {
+            File file = GetFileById(fileId);
+            string source = file.Source;
+            int index = source.IndexOf(',');
+            return source.Remove(0, index + 1);
         }
     }
 }
