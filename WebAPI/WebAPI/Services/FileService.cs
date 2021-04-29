@@ -17,12 +17,27 @@ namespace WebAPI.Services
         {
             return fileRepository.GetAllFiles();
         }
+        public List<FileVM> GetCurrentFiles()
+        {
+            return fileRepository.GetCurrentFiles();
+        }
         public File GetFileById(string id)
         {
             return fileRepository.GetFileById(id);
         }
         public void AddFile(File data)
         {
+            List<File> files = fileRepository.GetFiles();
+            foreach(var file in files)
+            {
+                if(file.Name.Equals(data.Name))
+                {
+                    file.IsCurrent = false;
+                    fileRepository.EditFile(file);
+                }
+            }
+            data.IsCurrent = true;
+            data.CreatedDate = DateTime.Now;
             fileRepository.AddFile(data);
         }
         public void EditFile(File data)
@@ -39,6 +54,14 @@ namespace WebAPI.Services
             string source = file.Source;
             int index = source.IndexOf(',');
             return source.Remove(0, index + 1);
+        }
+        public void DeleteFileByName(string fileName)
+        {
+            List<File> files = fileRepository.GetFilesByName(fileName);
+            foreach(var file in files)
+            {
+                DeleteFile(file.Id);
+            }
         }
     }
 }

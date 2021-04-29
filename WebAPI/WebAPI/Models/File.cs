@@ -13,9 +13,13 @@ namespace WebAPI.Models
         public string Name { get; set; }
         [BsonElement("type")]
         public string Type { get; set; }
-        [BsonElement("include")]
-        public string Include { get; set; }
         [BsonElement("source")]
         public string Source { get; set; }
+        [BsonElement("isCurrent")]
+        public bool IsCurrent { get; set; }
+        [BsonElement("parentId")]
+        public string ParentId { get; set; }
+        [BsonElement("createdDate")]
+        public BsonDateTime CreatedDate { get; set; }
     }
 }

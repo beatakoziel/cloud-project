@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
 using WebAPI.Services;
+using WebAPI.ViewModels;
 
 namespace WebAPI.Controllers
 {
@@ -14,9 +15,9 @@ namespace WebAPI.Controllers
             this.fileService = fileService;
         }
         [HttpGet]
-        public ActionResult GetAllFiles()
+        public ActionResult GetCurrentFiles()
         {
-            var data = fileService.GetAllFiles();
+            var data = fileService.GetCurrentFiles();
             return Ok(data);
         }
         [HttpGet("{fileId}")]
@@ -53,6 +54,12 @@ namespace WebAPI.Controllers
         {
             var data = fileService.GetFileSource(fileId);
             return Ok(data);
+        }
+        [HttpPost("deleteByName")]
+        public ActionResult DeleteByName(FileNameParameter file)
+        {
+            fileService.DeleteFileByName(file.Name);
+            return Ok(true);
         }
     }
 }

@@ -89,10 +89,11 @@ namespace FolderWatcherService
             var content = new StringContent(JsonSerializer.Serialize(file).ToString(), Encoding.UTF8, "application/json");
             _ = await httpClient.PostAsync("", content);
         }
-        static void DeletedWatcher(object sender, FileSystemEventArgs e)
+        static async void DeletedWatcher(object sender, FileSystemEventArgs e)
         {
-            //TODO
-            throw new NotImplementedException();
+            var content = new StringContent(JsonSerializer.Serialize(new FileNameParameter() { Name = e.Name }).ToString(), Encoding.UTF8, "application/json"); ;
+
+            _ = await httpClient.PostAsync("deleteByName", content);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

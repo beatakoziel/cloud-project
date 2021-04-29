@@ -12,5 +12,7 @@ namespace WebAPI.Services
         void EditFile(File data);
         void DeleteFile(string id);
         string GetFileSource(string fileId);
+        List<FileVM> GetCurrentFiles();
+        void DeleteFileByName(string fileName);
     }
 }

@@ -27,6 +27,22 @@ namespace WebAPI.Repositories
 
             return result;
         }
+        public List<FileVM> GetCurrentFiles()
+        {
+            List<File> files = _context.Files.Find(x => x.IsCurrent == true).ToList();
+            List<FileVM> result = files.Select(x => new FileVM
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Type = x.Type
+            }).ToList();
+
+            return result;
+        }
+        public List<File> GetFiles()
+        {
+            return _context.Files.Find(x => true).ToList();
+        }
         public File GetFileById(string id)
         {
             return _context.Files.Find(x => x.Id == id).FirstOrDefault();
@@ -42,6 +58,10 @@ namespace WebAPI.Repositories
         public void DeleteFile(string id)
         {
             _context.Files.DeleteOne(x => x.Id == id);
+        }
+        public List<File> GetFilesByName(string fileName)
+        {
+            return _context.Files.Find(x => x.Name.Equals(fileName)).ToList();
         }
     }
 }
