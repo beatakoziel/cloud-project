@@ -9,6 +9,7 @@ using WebAPI.Services;
 using System;
 using System.Reflection;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 
 namespace WebAPI
@@ -74,6 +75,10 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
 
@@ -82,8 +87,12 @@ namespace WebAPI
             app.UseSwagger(c => { c.SerializeAsV2 = true; });
             app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
             app.UseRouting();
-
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.Run((async (context) =>
+            {
+                await context.Response.WriteAsync("Could note find anything");
+            }));
         }
     }
 }

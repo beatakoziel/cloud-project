@@ -11,9 +11,11 @@ namespace WebAPI.Models
         public string Id { get; set; }
         [BsonElement("name")]
         public string Name { get; set; }
-        [BsonElement("type")]
-        public string Type { get; set; }
+        [BsonElement("contentType")]
+        public string ContentType { get; set; }
         [BsonElement("source")]
+        public string Path { get; set; }
+        [BsonElement("path")]
         public string Source { get; set; }
         [BsonElement("isCurrent")]
         public bool IsCurrent { get; set; }

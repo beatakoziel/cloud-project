@@ -22,7 +22,7 @@ namespace WebAPI.Repositories
             {
                 Id = x.Id,
                 Name = x.Name,
-                Type = x.Type
+                ContentType = x.ContentType
             }).ToList();
 
             return result;
@@ -34,7 +34,7 @@ namespace WebAPI.Repositories
             {
                 Id = x.Id,
                 Name = x.Name,
-                Type = x.Type
+                ContentType = x.ContentType
             }).ToList();
 
             return result;

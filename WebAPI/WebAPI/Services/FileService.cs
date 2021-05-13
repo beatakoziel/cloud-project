@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using WebAPI.Models;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using WebAPI.Repositories;
 using WebAPI.ViewModels;
+using File = WebAPI.Models.File;
 
 namespace WebAPI.Services
 {
@@ -25,8 +28,21 @@ namespace WebAPI.Services
         {
             return fileRepository.GetFileById(id);
         }
-        public void AddFile(File data)
+        public void AddFile(IFormFile data)
         {
+            string rootPath = "C:\\Users\\beatinho\\Downloads\\uploads\\";
+            string filePath = rootPath + data.FileName;
+            if (!Directory.Exists(rootPath))
+            {
+                Directory.CreateDirectory(rootPath);
+            }
+            
+            using (FileStream fileStream = System.IO.File.Create(filePath))
+            {
+                data.CopyTo(fileStream);
+                fileStream.Flush();
+            }
+            File newFile = new File();
             List<File> files = fileRepository.GetFiles();
             foreach(var file in files)
             {
@@ -36,9 +52,12 @@ namespace WebAPI.Services
                     fileRepository.EditFile(file);
                 }
             }
-            data.IsCurrent = true;
-            data.CreatedDate = DateTime.Now;
-            fileRepository.AddFile(data);
+            newFile.Name = data.FileName;
+            newFile.Path = filePath;
+            newFile.ContentType = data.ContentType;
+            newFile.IsCurrent = true;
+            newFile.CreatedDate = DateTime.Now;
+            fileRepository.AddFile(newFile);
         }
         public void EditFile(File data)
         {

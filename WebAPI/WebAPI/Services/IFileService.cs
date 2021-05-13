@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using WebAPI.Models;
 using WebAPI.ViewModels;
 
@@ -8,7 +9,7 @@ namespace WebAPI.Services
     {
         List<FileVM> GetAllFiles();
         File GetFileById(string id);
-        void AddFile(File data);
+        void AddFile(IFormFile data);
         void EditFile(File data);
         void DeleteFile(string id);
         string GetFileSource(string fileId);

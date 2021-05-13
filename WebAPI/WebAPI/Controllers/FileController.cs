@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using WebAPI.Models;
 using WebAPI.Services;
 using WebAPI.ViewModels;
@@ -32,7 +33,7 @@ namespace WebAPI.Controllers
             return "hello";
         }
         [HttpPost]
-        public ActionResult Add(File file)
+        public ActionResult Add(IFormFile file)
         {
             fileService.AddFile(file);
             return Ok(true);
