@@ -9,6 +9,7 @@ namespace WebAPI.Repositories
         List<FileVM> GetAllFiles();
         File GetFileById(string id);
         void AddFile(File data);
+        FileVM GetCurrentFileByName(string name);
         void EditFile(File data);
         void DeleteFile(string id);
         List<FileVM> GetCurrentFiles();

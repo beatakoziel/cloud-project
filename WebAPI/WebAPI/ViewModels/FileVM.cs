@@ -10,5 +10,7 @@ namespace WebAPI.ViewModels
         public string Id { get; set; }
         public string Name { get; set; }
         public string ContentType { get; set; }
+        public List<FileVM> PreviousVersions { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

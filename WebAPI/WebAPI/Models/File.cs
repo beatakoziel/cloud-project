@@ -19,6 +19,9 @@ namespace WebAPI.Models
         public string Source { get; set; }
         [BsonElement("isCurrent")]
         public bool IsCurrent { get; set; }
+        [BsonElement("currentId")]
+        public string CurrentId { get; set; }
+        
         [BsonElement("parentId")]
         public string ParentId { get; set; }
         [BsonElement("createdDate")]

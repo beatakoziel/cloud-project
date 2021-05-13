@@ -27,6 +27,12 @@ namespace WebAPI.Controllers
             var data = fileService.GetFileById(fileId);
             return Ok(data);
         }
+        [HttpGet("{name}/current")]
+        public ActionResult GetCurrent(string name)
+        {
+            var data = fileService.GetCurrentFile(name);
+            return Ok(data);
+        }
         [HttpGet("test")]
         public string Test()
         {

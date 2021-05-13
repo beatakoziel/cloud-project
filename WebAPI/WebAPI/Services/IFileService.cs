@@ -9,6 +9,7 @@ namespace WebAPI.Services
     {
         List<FileVM> GetAllFiles();
         File GetFileById(string id);
+        FileVM GetCurrentFile(string name);
         void AddFile(IFormFile data);
         void EditFile(File data);
         void DeleteFile(string id);
