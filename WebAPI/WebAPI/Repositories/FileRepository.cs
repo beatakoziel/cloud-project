@@ -38,7 +38,8 @@ namespace WebAPI.Repositories
             {
                 Id = x.Id,
                 Name = x.Name,
-                ContentType = x.ContentType
+                ContentType = x.ContentType,
+                CreatedDate = x.CreatedDate.ToLocalTime()
             }).ToList();
 
             return result;
