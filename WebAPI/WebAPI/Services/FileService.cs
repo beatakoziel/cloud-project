@@ -42,27 +42,27 @@ namespace WebAPI.Services
         public void AddFile(IFormFile data)
         {
             string rootPath = "C:\\Users\\beatinho\\Downloads\\uploads\\";
-            string filePath = rootPath + data.FileName;
             if (!Directory.Exists(rootPath))
             {
                 Directory.CreateDirectory(rootPath);
-            }
-
-            using (FileStream fileStream = System.IO.File.Create(filePath))
-            {
-                data.CopyTo(fileStream);
-                fileStream.Flush();
             }
 
             List<File> previousFiles = fileRepository.GetFiles()
                 .FindAll(f => f.Name == data.FileName && f.ContentType == data.ContentType);
             File newFile = new File();
             newFile.Name = data.FileName;
-            newFile.Path = filePath;
             newFile.ContentType = data.ContentType;
             newFile.IsCurrent = true;
             newFile.CreatedDate = DateTime.Now;
             fileRepository.AddFile(newFile);
+            string filePath = rootPath + newFile.Id + "." + data.FileName.Substring(data.FileName.IndexOf(".", StringComparison.Ordinal) + 1);;
+            newFile.Path = filePath;
+            fileRepository.EditFile(newFile);
+            using (FileStream fileStream = System.IO.File.Create(filePath))
+            {
+                data.CopyTo(fileStream);
+                fileStream.Flush();
+            }
             if (previousFiles.Count > 0)
             {
                 File previousFile = previousFiles
@@ -75,6 +75,7 @@ namespace WebAPI.Services
             }
         }
 
+        
         public void EditFile(File data)
         {
             fileRepository.EditFile(data);
