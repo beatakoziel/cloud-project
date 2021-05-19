@@ -85,12 +85,16 @@ namespace WebAPI.Services
             fileRepository.DeleteFile(id);
         }
 
-        public string GetFileSource(string fileId)
+        public FileSourceVM GetFileSource(string fileId)
         {
             File file = GetFileById(fileId);
-            string source = file.Source;
-            int index = source.IndexOf(',');
-            return source.Remove(0, index + 1);
+            byte[] source =  System.IO.File.ReadAllBytes(file.Path);
+            return new FileSourceVM
+            {
+                Name = file.Name,
+                ContentType = file.ContentType,
+                Source = source
+            };
         }
 
         public void DeleteFileByName(string fileName)

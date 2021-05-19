@@ -56,13 +56,23 @@ namespace WebAPI.Controllers
             fileService.DeleteFile(fileId);
             return Ok(true);
         }
-        [HttpGet("getFileSource/{fileId}")]
+        [HttpGet("{fileId}/source")]
         public ActionResult GetFileSource(string fileId)
         {
-            var data = fileService.GetFileSource(fileId);
-            return Ok(data);
+            FileSourceVM file = fileService.GetFileSource(fileId);
+
+            var cd = new System.Net.Mime.ContentDisposition
+            {
+                FileName = file.Name,
+                Inline = true,
+            };
+
+            Response.Headers.Add("Content-Disposition", cd.ToString());
+
+            return File(file.Source, file.ContentType);
         }
-        [HttpPost("deleteByName")]
+        
+        [HttpDelete]
         public ActionResult DeleteByName(FileNameParameter file)
         {
             fileService.DeleteFileByName(file.Name);
