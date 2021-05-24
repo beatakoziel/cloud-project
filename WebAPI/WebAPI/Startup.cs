@@ -37,9 +37,11 @@ namespace WebAPI
 
             // services
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IDirectoryService, DirectoryService>();
 
             // repositories
             services.AddTransient<IFileRepository, FileRepository>();
+            services.AddTransient<IDirectoryRepository, DirectoryRepository>();
 
             services.AddControllers();
 

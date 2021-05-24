@@ -1,5 +1,6 @@
 import { getField, updateField } from "vuex-map-fields";
 import service from "../service";
+import router from '@/router'
 
 const namespaced = true;
 
@@ -10,11 +11,17 @@ const state = {
     type: "",
     source: "",
   },
+  directory: {
+    dirName: "",
+  },
+  previousVersions: [],
+  directoriesList: [],
 };
 
 const getters = {
   getField,
   getFilesList: (state) => state.filesList,
+  getDirectoriesList: (state) => state.directoriesList,
 };
 
 const mutations = {
@@ -22,31 +29,48 @@ const mutations = {
   SET_FILES_LIST: (state, payload) => {
     state.filesList = payload;
   },
+  SET_DIRECTORIES_LIST: (state, payload) => {
+    state.directoriesList = payload;
+  },
 };
 
 const actions = {
-  setFilesList: ({ commit }) => {
-    service.getAllFiles().then((response) => {
+  setFilesList: async ({ rootState, commit }) => {
+    await service.getAllFiles(router.currentRoute.params.dirId).then((response) => {
       commit("SET_FILES_LIST", response.data);
     });
   },
-  uploadFile: ({ state }) => {
-    service.uploadFile(state.file);
+  uploadFile: async ({ rootState }, formData) => {
+    await service.uploadFile(formData, router.currentRoute.params.dirId).catch((error) => {
+      console.log(error);
+    });
   },
   downloadFile: ({ commit }, fileId) => {
     return new Promise((resolve, reject) => {
       service
         .downloadFile(fileId)
         .then((response) => {
-          resolve(response.data);
+          resolve(response);
         })
         .catch((error) => {
           reject(error);
         });
     });
   },
-  deleteFile: ({ commit }, fileId) => {
-    service.deleteFile(fileId);
+  deleteFile: async ({ commit }, fileId) => {
+    await service.deleteFile(fileId).catch((error) => {
+      console.log(error);
+    });
+  },
+  addDir: async ({ rootState }, dirName) => {
+    await service.addDirectory(router.currentRoute.params.dirId, dirName).catch((error) => {
+      console.log(error);
+    });
+  },
+  setDirectoriesList: async ({ rootState, commit }) => {
+    await service.getDirectories(router.currentRoute.params.dirId).then((response) => {
+      commit("SET_DIRECTORIES_LIST", response.data);
+    });
   },
 };
 

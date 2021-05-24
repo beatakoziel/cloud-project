@@ -16,6 +16,8 @@ import "@fortawesome/fontawesome-free/js/all.js";
 
 Vue.config.productionTip = false;
 
+Vue.use(require('vue-moment'));
+
 new Vue({
   store,
   router,

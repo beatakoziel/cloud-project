@@ -11,11 +11,11 @@ namespace WebAPI.Services
         List<FileVM> GetAllFiles();
         File GetFileById(string id);
         FileVM GetCurrentFile(string name);
-        void AddFile(IFormFile data);
+        void AddFile(IFormFile data, string dirId);
         void EditFile(File data);
         void DeleteFile(string id);
         FileSourceVM GetFileSource(string fileId);
-        List<FileVM> GetCurrentFiles();
+        List<FileVM> GetCurrentFiles(string dirId);
         void DeleteFileByName(string fileName);
     }
 }

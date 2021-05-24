@@ -12,7 +12,7 @@ namespace WebAPI.Repositories
         FileVM GetCurrentFileByName(string name);
         void EditFile(File data);
         void DeleteFile(string id);
-        List<FileVM> GetCurrentFiles();
+        List<FileVM> GetCurrentFiles(string dirId);
         List<File> GetFiles();
         List<File> GetFilesByName(string fileName);
     }

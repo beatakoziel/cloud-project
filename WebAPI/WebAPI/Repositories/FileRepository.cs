@@ -31,9 +31,9 @@ namespace WebAPI.Repositories
             return result;
         }
 
-        public List<FileVM> GetCurrentFiles()
+        public List<FileVM> GetCurrentFiles(string dirId)
         {
-            List<File> files = _context.Files.Find(x => x.IsCurrent == true).ToList();
+            List<File> files = _context.Files.Find(x => x.IsCurrent == true && x.DirectoryId.Equals(dirId)).ToList();
             List<FileVM> result = files.Select(x => new FileVM
             {
                 Id = x.Id,
@@ -41,6 +41,21 @@ namespace WebAPI.Repositories
                 ContentType = x.ContentType,
                 CreatedDate = x.CreatedDate.ToLocalTime()
             }).ToList();
+
+
+            foreach (var res in result)
+            {
+                List<FileVM> previousVersions = _context.Files
+                .Find(x => x.Name == res.Name && !x.IsCurrent)
+                .ToList()
+                .Select(f => new FileVM
+                {
+                    Id = f.Id,
+                    CreatedDate = f.CreatedDate.ToLocalTime(),
+                    Name = res.Name
+                }).ToList();
+                res.PreviousVersions = previousVersions;
+            }
 
             return result;
         }

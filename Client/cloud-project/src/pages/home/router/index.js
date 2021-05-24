@@ -2,7 +2,7 @@ import Index from "../views/Index.vue";
 
 const routes = [
   {
-    path: "/home",
+    path: "/home/:dirId",
     name: "home.index",
     component: Index,
   },

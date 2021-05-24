@@ -24,9 +24,9 @@ namespace WebAPI.Services
             return fileRepository.GetAllFiles();
         }
 
-        public List<FileVM> GetCurrentFiles()
+        public List<FileVM> GetCurrentFiles(string dirId)
         {
-            return fileRepository.GetCurrentFiles();
+            return fileRepository.GetCurrentFiles(dirId);
         }
 
         public File GetFileById(string id)
@@ -39,9 +39,9 @@ namespace WebAPI.Services
             return fileRepository.GetCurrentFileByName(name);
         }
 
-        public void AddFile(IFormFile data)
+        public void AddFile(IFormFile data, string dirId)
         {
-            string rootPath = "C:\\Users\\beatinho\\Downloads\\uploads\\";
+            string rootPath = @"D:\cloud-project-storage\";
             if (!Directory.Exists(rootPath))
             {
                 Directory.CreateDirectory(rootPath);
@@ -54,6 +54,7 @@ namespace WebAPI.Services
             newFile.ContentType = data.ContentType;
             newFile.IsCurrent = true;
             newFile.CreatedDate = DateTime.Now;
+            newFile.DirectoryId = dirId;
             fileRepository.AddFile(newFile);
             string filePath = rootPath + newFile.Id + "." + data.FileName.Substring(data.FileName.IndexOf(".", StringComparison.Ordinal) + 1);;
             newFile.Path = filePath;

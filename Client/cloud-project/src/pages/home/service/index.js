@@ -1,12 +1,13 @@
 import axios from "@/http-common";
 const files = "/files";
+const directories = "/directories";
 
 class homeService {
-  getAllFiles() {
-    return axios.get(`${files}`);
+  getAllFiles(dirId) {
+    return axios.get(`${files}/getFiles/${dirId}`);
   }
-  uploadFile(file) {
-    axios.post(`${files}`, file);
+  uploadFile(formData, dirId) {
+    return axios.post(`${files}/addFile/${dirId}`, formData);
   }
   getFileById(fileId) {
     return axios.get(`${files}/${fileId}`);
@@ -15,7 +16,15 @@ class homeService {
     return axios.delete(`${files}/${fileId}`);
   }
   downloadFile(fileId) {
-    return axios.get(`${files}/getFileSource/${fileId}`);
+    return axios.get(`${files}/${fileId}/source`, {
+      responseType: "arraybuffer",
+    });
+  }
+  getDirectories(dirId) {
+    return axios.get(`${directories}/getDirectories/${dirId}`);
+  }
+  addDirectory(dirId, dirName) {
+    return axios.post(`${directories}/${dirId}/${dirName}`);
   }
 }
 

@@ -15,10 +15,10 @@ namespace WebAPI.Controllers
         {
             this.fileService = fileService;
         }
-        [HttpGet]
-        public ActionResult GetCurrentFiles()
+        [HttpGet("getFiles/{dirId}")]
+        public ActionResult GetCurrentFiles(string dirId)
         {
-            var data = fileService.GetCurrentFiles();
+            var data = fileService.GetCurrentFiles(dirId);
             return Ok(data);
         }
         [HttpGet("{name}")]
@@ -27,10 +27,10 @@ namespace WebAPI.Controllers
             var data = fileService.GetCurrentFile(name);
             return Ok(data);
         }
-        [HttpPost]
-        public ActionResult Add(IFormFile file)
+        [HttpPost("addFile/{dirId}")]
+        public ActionResult Add(IFormFile file, string dirId)
         {
-            fileService.AddFile(file);
+            fileService.AddFile(file, dirId);
             return Ok(true);
         }
         [HttpPut]

@@ -1,9 +1,6 @@
 <template>
   <div>
     <div class="tile">
-      <div @click="setFile">
-        <i class="fas fa-cloud-download-alt download-ico "></i>
-      </div>
       <div class="icon d-flex justify-content-center">
         <div v-if="fileType === 'application/pdf'">
           <i class="fas fa-file-pdf"></i>
@@ -31,8 +28,6 @@
   </div>
 </template>
 <script>
-import { mapActions } from "vuex";
-const STORE = "HomeStore";
 export default {
   props: {
     fileId: {
@@ -46,31 +41,6 @@ export default {
     fileType: {
       type: String,
       required: true,
-    },
-  },
-  methods: {
-    ...mapActions(STORE, ["downloadFile"]),
-    setFile() {
-      this.downloadFile(this.fileId).then((response) => {
-        this.download(response);
-      });
-    },
-    download(source) {
-      const byteCharacters = atob(source);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-
-      let uriContent = URL.createObjectURL(
-        new Blob([byteArray], { type: `${this.fileType}` })
-      );
-      let link = document.createElement("a");
-      link.setAttribute("href", uriContent);
-      link.setAttribute("download", this.fileName);
-      let event = new MouseEvent("click");
-      link.dispatchEvent(event);
     },
   },
 };
@@ -95,7 +65,7 @@ export default {
 .name {
   font-size: 16px;
   overflow: hidden;
-  white-space: nowrap;
+  white-space: wrap;
   text-overflow: ellipsis;
 }
 .download-ico {

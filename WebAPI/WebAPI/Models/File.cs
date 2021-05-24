@@ -26,5 +26,7 @@ namespace WebAPI.Models
         public string ParentId { get; set; }
         [BsonElement("createdDate")]
         public BsonDateTime CreatedDate { get; set; }
+        [BsonElement("directoryId")]
+        public string DirectoryId { get; set; }
     }
 }

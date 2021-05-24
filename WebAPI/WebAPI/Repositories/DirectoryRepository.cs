@@ -1,0 +1,34 @@
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using WebAPI.Contexts;
+using WebAPI.Models;
+
+namespace WebAPI.Repositories
+{
+    public class DirectoryRepository : IDirectoryRepository
+    {
+        private readonly DirectoryContext _context = null;
+
+        public DirectoryRepository(IOptions<Settings> settings)
+        {
+            _context = new DirectoryContext(settings);
+        }
+        public List<Directory> GetDirectories(string dirId)
+        {
+            return _context.Directories.Find(x => x.ParentId.Equals(dirId)).ToList();
+        }
+        public void AddDirectory(string dirId, string dirName)
+        {
+            Directory directory = new Directory
+            {
+                Name = dirName,
+                ParentId = dirId
+            };
+            _context.Directories.InsertOne(directory);
+        }
+    }
+}

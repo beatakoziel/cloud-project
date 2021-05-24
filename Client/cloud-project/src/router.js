@@ -10,7 +10,7 @@ var allRoutes = [];
 const redirectToHome = [
   {
     path: "/",
-    redirect: { name: "home.index" },
+    redirect: { name: "home.index", params: { dirId: "0" } },
   },
 ];
 
