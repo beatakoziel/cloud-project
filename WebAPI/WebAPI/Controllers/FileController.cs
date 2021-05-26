@@ -28,6 +28,7 @@ namespace WebAPI.Controllers
             return Ok(data);
         }
         [HttpPost("addFile/{dirId}")]
+        [RequestSizeLimit(long.MaxValue)]
         public ActionResult Add(IFormFile file, string dirId)
         {
             fileService.AddFile(file, dirId);
