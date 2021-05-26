@@ -22,5 +22,12 @@ namespace WebAPI.Services
         {
             directoryRepository.AddDirectory(dirId, dirName);
         }
+        public string GetCurrentDirName(string dirId)
+        {
+            if (dirId.Equals("0"))
+                return "Folder główny";
+            else
+                return directoryRepository.GetCurrentDirName(dirId);
+        }
     }
 }

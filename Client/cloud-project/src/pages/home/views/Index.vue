@@ -1,12 +1,11 @@
 <template>
   <div>
-    <div v-if="this.$route.params.dirId === `0`" class="row mb-4">
-      <h1>Folder główny</h1>
-    </div>
-    <div v-else>
-      <h1>getFolderName TODO</h1>
-    </div>
     <div class="row">
+      <div>
+        <h1 class="title mb-4">{{ getCurrentDirName }}</h1>
+      </div>
+    </div>
+    <div class="row mt-4 mb-4">
       <h4>Foldery</h4>
       <div class="mt-2">
         <button class="button-wide" @click="addDirectory($event)">
@@ -14,10 +13,14 @@
         </button>
       </div>
       <div class="mt-2 flexxin" v-if="getDirectoriesList.length !== 0">
-        <div class="mr-2" v-for="dir in getDirectoriesList" :key="dir.id">
+        <div
+          class="mr-2 folder-tile"
+          v-for="dir in getDirectoriesList"
+          :key="dir.id"
+        >
           <div @click="routerPushToFolder(dir.id)">
-            <i class="fas fa-folder"></i>
-            {{ dir.name }}
+            <div class="folder-ico"><i class="fas fa-folder"></i></div>
+            <div class="folder-name">{{ dir.name }}</div>
           </div>
         </div>
       </div>
@@ -113,8 +116,8 @@
           >
         </div>
       </b-modal>
-      <div v-if="this.$route.params.dirId !== `0`">
-        <button @click="goBack">Powrót</button>
+      <div v-if="this.$route.params.dirId !== `0`" class="mt-4 ">
+        <button class="button" @click="goBack">Powrót</button>
       </div>
     </div>
   </div>
@@ -149,7 +152,11 @@ export default {
       "previousVersions",
       "directory.dirName",
     ]),
-    ...mapGetters(STORE, ["getFilesList", "getDirectoriesList"]),
+    ...mapGetters(STORE, [
+      "getFilesList",
+      "getDirectoriesList",
+      "getCurrentDirName",
+    ]),
   },
   methods: {
     ...mapActions(STORE, [
@@ -159,6 +166,7 @@ export default {
       "downloadFile",
       "addDir",
       "setDirectoriesList",
+      "setCurrentDirName",
     ]),
     getFile(event) {
       this.newFile = event.target.files[0];
@@ -229,6 +237,8 @@ export default {
       await this.setFilesList(this.$route.params.dirId);
       await this.setDirectoriesList(this.$route.params.dirId);
       this.loading = false;
+
+      this.setCurrentDirName();
     },
     async goBack() {
       this.$router.go(-1);
@@ -237,6 +247,8 @@ export default {
       await this.setDirectoriesList(this.$route.params.dirId);
       await this.setFilesList(this.$route.params.dirId);
       this.loading = false;
+
+      this.setCurrentDirName();
     },
   },
   mounted() {
@@ -244,6 +256,8 @@ export default {
     this.setFilesList(this.$route.params.dirId);
     this.setDirectoriesList(this.$route.params.dirId);
     this.loading = false;
+
+    this.setCurrentDirName();
   },
   components: {
     FileTile,
@@ -265,7 +279,7 @@ export default {
   background-color: white;
   border-color: #22659f;
   color: #22659f;
-  width: 150px;
+  width: 120px;
   font-size: 16px;
 }
 .flexxin {
@@ -297,5 +311,28 @@ export default {
 }
 .download-ico:hover {
   color: blue;
+}
+.folder-tile {
+  border: 1px solid black;
+  border-radius: 3px;
+  height: 75px;
+  width: 75px;
+  justify-content: center;
+}
+.folder-tile:hover {
+  cursor: pointer;
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.2);
+}
+.folder-ico {
+  justify-content: center;
+  display: flex;
+  margin-top: 12px;
+}
+.folder-name {
+  text-align: center;
+  overflow: hidden;
+}
+.title {
+  color: #6c6c6c;
 }
 </style>

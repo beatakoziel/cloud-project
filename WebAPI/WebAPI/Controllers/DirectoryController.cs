@@ -28,5 +28,11 @@ namespace WebAPI.Controllers
             directoryService.AddDirectory(dirId, dirName);
             return Ok(true);
         }
+        [HttpGet("getCurrentDirName/{dirId}")]
+        public ActionResult GetCurrentDirName(string dirId)
+        {
+            var data = directoryService.GetCurrentDirName(dirId);
+            return Ok(data);
+        }
     }
 }

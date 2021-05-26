@@ -11,6 +11,7 @@ using System.Reflection;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace WebAPI
 {
@@ -44,6 +45,14 @@ namespace WebAPI
             services.AddTransient<IDirectoryRepository, DirectoryRepository>();
 
             services.AddControllers();
+
+            // allow to handle large object in HTTP communication
+            services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = 3200000000;
+                options.MultipartHeadersLengthLimit = int.MaxValue;
+            });
 
             services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
             {

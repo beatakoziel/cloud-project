@@ -26,6 +26,9 @@ class homeService {
   addDirectory(dirId, dirName) {
     return axios.post(`${directories}/${dirId}/${dirName}`);
   }
+  getCurrentDirName(dirId) {
+    return axios.get(`${directories}/getCurrentDirName/${dirId}`)
+  }
 }
 
 export default new homeService();

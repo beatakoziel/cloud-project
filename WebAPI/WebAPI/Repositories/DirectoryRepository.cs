@@ -30,5 +30,10 @@ namespace WebAPI.Repositories
             };
             _context.Directories.InsertOne(directory);
         }
+        public string GetCurrentDirName(string dirId)
+        {
+            Directory dir = _context.Directories.Find(x => x.Id.Equals(dirId)).FirstOrDefault();
+            return dir.Name;
+        }
     }
 }

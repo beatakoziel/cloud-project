@@ -10,5 +10,6 @@ namespace WebAPI.Repositories
     {
         List<Directory> GetDirectories(string dirId);
         void AddDirectory(string dirId, string dirName);
+        string GetCurrentDirName(string dirId);
     }
 }

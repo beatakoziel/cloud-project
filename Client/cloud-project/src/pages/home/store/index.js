@@ -16,12 +16,14 @@ const state = {
   },
   previousVersions: [],
   directoriesList: [],
+  currentDirName: "",
 };
 
 const getters = {
   getField,
   getFilesList: (state) => state.filesList,
   getDirectoriesList: (state) => state.directoriesList,
+  getCurrentDirName: (state) => state.currentDirName,
 };
 
 const mutations = {
@@ -32,6 +34,9 @@ const mutations = {
   SET_DIRECTORIES_LIST: (state, payload) => {
     state.directoriesList = payload;
   },
+  SET_CURRENT_DIR_NAME: (state, payload) => {
+    state.currentDirName = payload;
+  }
 };
 
 const actions = {
@@ -72,6 +77,11 @@ const actions = {
       commit("SET_DIRECTORIES_LIST", response.data);
     });
   },
+  setCurrentDirName: ({ commit }) => {
+    service.getCurrentDirName(router.currentRoute.params.dirId).then((response) => {
+      commit("SET_CURRENT_DIR_NAME", response.data);
+    })
+  }
 };
 
 export default { state, getters, mutations, actions, namespaced };

@@ -53,6 +53,9 @@ export default {
   border-radius: 5px;
   cursor: pointer;
 }
+.tile:hover{
+  box-shadow: 0 0 11px rgba(33,33,33,.2); 
+}
 .icon {
   width: 150px;
   margin-top: 4px;
