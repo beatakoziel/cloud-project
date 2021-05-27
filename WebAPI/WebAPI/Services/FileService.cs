@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FolderWatcherService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using WebAPI.Repositories;
@@ -33,7 +34,7 @@ namespace WebAPI.Services
         {
             return fileRepository.GetFileById(id);
         }
-        
+
         public FileVM GetCurrentFile(string name)
         {
             return fileRepository.GetCurrentFileByName(name);
@@ -56,7 +57,9 @@ namespace WebAPI.Services
             newFile.CreatedDate = DateTime.Now;
             newFile.DirectoryId = dirId;
             fileRepository.AddFile(newFile);
-            string filePath = rootPath + newFile.Id + "." + data.FileName.Substring(data.FileName.IndexOf(".", StringComparison.Ordinal) + 1);;
+            string filePath = rootPath + newFile.Id + "." +
+                              data.FileName.Substring(data.FileName.IndexOf(".", StringComparison.Ordinal) + 1);
+            ;
             newFile.Path = filePath;
             fileRepository.EditFile(newFile);
             using (FileStream fileStream = System.IO.File.Create(filePath))
@@ -64,6 +67,7 @@ namespace WebAPI.Services
                 data.CopyTo(fileStream);
                 fileStream.Flush();
             }
+
             if (previousFiles.Count > 0)
             {
                 File previousFile = previousFiles
@@ -76,21 +80,26 @@ namespace WebAPI.Services
             }
         }
 
-        
+
         public void EditFile(File data)
         {
             fileRepository.EditFile(data);
         }
 
-        public void DeleteFile(string id)
+        public void DeleteFile(string fileId)
         {
-            fileRepository.DeleteFile(id);
+            File file = GetFileById(fileId);
+            if (System.IO.File.Exists(file.Path))
+            {
+                System.IO.File.Delete(file.Path);
+                fileRepository.DeleteFile(fileId);
+            }
         }
 
         public FileSourceVM GetFileSource(string fileId)
         {
             File file = GetFileById(fileId);
-            byte[] source =  System.IO.File.ReadAllBytes(file.Path);
+            byte[] source = System.IO.File.ReadAllBytes(file.Path);
             return new FileSourceVM
             {
                 Name = file.Name,
