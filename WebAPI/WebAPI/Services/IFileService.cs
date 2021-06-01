@@ -17,5 +17,9 @@ namespace WebAPI.Services
         FileSourceVM GetFileSource(string fileId);
         List<FileVM> GetCurrentFiles(string dirId);
         void DeleteFileByName(string fileName);
+        void AddFileFromService(FileParameterVM file);
+        void DeleteFileFromService(FileDeleteParameterVM file);
+
+        FileParameterVM GetFileToService(string fileId);
     }
 }

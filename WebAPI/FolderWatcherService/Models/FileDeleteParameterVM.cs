@@ -4,10 +4,9 @@ using System.Text;
 
 namespace FolderWatcherService.Models
 {
-    class FileVM
+    public class FileDeleteParameterVM
     {
         public string Name { get; set; }
-        public string Type { get; set; }
-        public string Source { get; set; }
+        public string Directory { get; set; }
     }
 }

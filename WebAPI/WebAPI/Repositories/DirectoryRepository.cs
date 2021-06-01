@@ -35,5 +35,14 @@ namespace WebAPI.Repositories
             Directory dir = _context.Directories.Find(x => x.Id.Equals(dirId)).FirstOrDefault();
             return dir.Name;
         }
+        public List<Directory> GetAllDirectories()
+        {
+            return _context.Directories.Find(x => true).ToList();
+        }
+        public string GetDirIdByName(string dirName)
+        {
+            Directory directory = _context.Directories.Find(x => x.Name.Equals(dirName)).FirstOrDefault();
+            return directory.Id;
+        }
     }
 }

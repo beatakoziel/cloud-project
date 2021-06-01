@@ -15,5 +15,6 @@ namespace WebAPI.Repositories
         List<FileVM> GetCurrentFiles(string dirId);
         List<File> GetFiles();
         List<File> GetFilesByName(string fileName);
+        void DeleteFileFromDirectory(string fileName, string dirId);
     }
 }

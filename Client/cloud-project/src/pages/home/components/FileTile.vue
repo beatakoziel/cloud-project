@@ -17,6 +17,9 @@
         <div v-else-if="fileType === 'audio/mp3'">
           <i class="fas fa-file-audio"></i>
         </div>
+        <div v-else-if="fileType === 'video/avi'">
+          <i class="fas fa-video"></i>
+        </div>
         <div v-else>
           <i class="fas fa-file"></i>
         </div>

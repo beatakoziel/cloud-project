@@ -26,7 +26,7 @@ namespace FolderWatcherService
         {
             _logger = logger;
         }
-        public static string GetFileContent(string fileName)
+        public static byte[] GetFileContent(string fileName)
         {
             string path = "C:\\CloudProject\\" + fileName;
             byte[] bytes;
@@ -51,14 +51,14 @@ namespace FolderWatcherService
 
             }
 
-            return Convert.ToBase64String(bytes);
+            return bytes;
         }
         public override Task StartAsync(CancellationToken cancellationToken)
         {
             // watcher
             watcher = new FileSystemWatcher(@"C:\CloudProject");
             watcher.EnableRaisingEvents = true;
-            watcher.IncludeSubdirectories = false;
+            watcher.IncludeSubdirectories = true;
 
             //watcher.Changed += ;
             //watcher.Renamed += ;
@@ -77,23 +77,40 @@ namespace FolderWatcherService
         }
         static async void CreatedWatcher(object sender, FileSystemEventArgs e)
         {
-            string fileSource = GetFileContent(e.Name);
+            // file system watcher doesn't see diffrences between files and diectories
+            // if e.name equals 'Nowy folder' it means that new directory has been created so it won't be handled in our implementation
+            if (e.Name.Equals("Nowy folder"))
+                return;
+
+            byte[] fileSource = GetFileContent(e.Name);
             string fileType;
             new FileExtensionContentTypeProvider().TryGetContentType(e.Name, out fileType);
-            FileVM file = new FileVM
+
+            // reflection to get prop from 'sender' argument
+            string path = sender.GetType().GetProperties().First(x => x.Name.Equals("Path")).GetValue(sender, null).ToString();
+
+            FileParameterVM file = new FileParameterVM
             {
                 Name = e.Name,
                 Source = fileSource,
-                Type = fileType
+                Type = fileType,
+                Directory = path
             };
             var content = new StringContent(JsonSerializer.Serialize(file).ToString(), Encoding.UTF8, "application/json");
-            _ = await httpClient.PostAsync("", content);
+            _ = await httpClient.PostAsync("service/addFile", content);
         }
         static async void DeletedWatcher(object sender, FileSystemEventArgs e)
         {
-            var content = new StringContent(JsonSerializer.Serialize(new FileNameParameter() { Name = e.Name }).ToString(), Encoding.UTF8, "application/json"); ;
+            // file system watcher doesn't see diffrences between files and diectories
+            // if e.name equals 'Nowy folder' it means that directory has been deleted so it won't be handled in our implementation
+            if (e.Name.Equals("Nowy folder"))
+                return;
 
-            _ = await httpClient.PostAsync("deleteByName", content);
+            string path = sender.GetType().GetProperties().First(x => x.Name.Equals("Path")).GetValue(sender, null).ToString();
+
+            var content = new StringContent(JsonSerializer.Serialize(new FileDeleteParameterVM() { Name = e.Name, Directory = path }).ToString(), Encoding.UTF8, "application/json"); ;
+
+            _ = await httpClient.PostAsync("service/deleteFile", content);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

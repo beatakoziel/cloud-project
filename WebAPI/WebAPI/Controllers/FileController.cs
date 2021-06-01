@@ -68,5 +68,24 @@ namespace WebAPI.Controllers
             fileService.DeleteFileByName(file.Name);
             return Ok(true);
         }
+        [HttpPost("service/addFile")]
+        [RequestSizeLimit(long.MaxValue)]
+        public ActionResult AddFileFromService(FileParameterVM file)
+        {
+            fileService.AddFileFromService(file);
+            return Ok(true);
+        }
+        [HttpPost("service/deleteFile")]
+        public ActionResult DeleteFileFromService(FileDeleteParameterVM file)
+        {
+            fileService.DeleteFileFromService(file);
+            return Ok(true);
+        }
+        [HttpGet("service/getFileToService/{fileId}")]
+        public ActionResult GetFileToService(string fileId)
+        {
+            var data = fileService.GetFileToService(fileId);
+            return Ok(data);
+        }
     }
 }
