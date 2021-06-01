@@ -49,13 +49,13 @@ namespace WebAPI.Services
             string rootPath = @"D:\cloud-project-storage\";
 
             List<File> previousFiles = fileRepository.GetFiles()
-                .FindAll(f => f.Name == data.FileName && f.ContentType == data.ContentType && f.DirectoryId.Equals(dirId));
+                .FindAll(f => f.Name.Equals(data.FileName) && f.ContentType.Equals(data.ContentType) && f.DirectoryId.Equals(dirId));
             File newFile = new File();
             newFile.Name = data.FileName;
             newFile.ContentType = data.ContentType;
-            newFile.IsCurrent = true;
             newFile.CreatedDate = DateTime.Now;
             newFile.DirectoryId = dirId;
+            newFile.IsCurrent = true;
             fileRepository.AddFile(newFile);
             string filePath = rootPath + newFile.Id + "." +
                               data.FileName.Substring(data.FileName.IndexOf(".", StringComparison.Ordinal) + 1);
@@ -73,10 +73,13 @@ namespace WebAPI.Services
                 File previousFile = previousFiles
                     .OrderBy(f => f.CreatedDate).First();
                 newFile.ParentId = previousFile.Id;
-                previousFile.IsCurrent = false;
-                previousFile.CurrentId = newFile.Id;
-                fileRepository.EditFile(previousFile);
                 fileRepository.EditFile(newFile);
+                foreach (var file in previousFiles)
+                {
+                    file.IsCurrent = false;
+                    file.CurrentId = newFile.Id;
+                    fileRepository.EditFile(file);
+                }
             }
 
             SendSignalToService(newFile.Id);
@@ -89,6 +92,17 @@ namespace WebAPI.Services
         }
 
         public void DeleteFile(string fileId)
+        {
+            File file = GetFileById(fileId);
+            List<File> previousFiles = fileRepository.GetFiles()
+                .FindAll(f => f.Name.Equals(file.Name) && f.ContentType.Equals(file.ContentType) && f.DirectoryId.Equals(file.DirectoryId));
+            foreach (var fileToDelete in previousFiles)
+            {
+                DeleteFileById(fileToDelete.Id);
+            }
+        }
+
+        public void DeleteFileById(string fileId)
         {
             File file = GetFileById(fileId);
             if (System.IO.File.Exists(file.Path))
@@ -115,7 +129,7 @@ namespace WebAPI.Services
             List<File> files = fileRepository.GetFilesByName(fileName);
             foreach (var file in files)
             {
-                DeleteFile(file.Id);
+                DeleteFileById(file.Id);
             }
         }
         public void AddFileFromService(FileParameterVM file)
@@ -224,7 +238,7 @@ namespace WebAPI.Services
 
             fileRepository.DeleteFileFromDirectory(file.Name, dirId);
         }
-        internal void SendSignalToService(string fileId) 
+        internal void SendSignalToService(string fileId)
         {
             Socket socket;
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -240,7 +254,7 @@ namespace WebAPI.Services
             File file = fileRepository.GetFileById(fileId);
 
             string dirName = "";
-            if(!file.DirectoryId.Equals("0"))
+            if (!file.DirectoryId.Equals("0"))
             {
                 dirName = directoryRepository.GetCurrentDirName(file.DirectoryId);
             }

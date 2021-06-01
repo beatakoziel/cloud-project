@@ -46,7 +46,7 @@ namespace WebAPI.Repositories
             foreach (var res in result)
             {
                 List<FileVM> previousVersions = _context.Files
-                .Find(x => x.Name == res.Name && !x.IsCurrent)
+                .Find(x => x.Name.Equals(res.Name) && x.DirectoryId.Equals(dirId) && !x.IsCurrent)
                 .ToList()
                 .Select(f => new FileVM
                 {
@@ -78,7 +78,7 @@ namespace WebAPI.Repositories
                 return null;
             File file = files.First();
             List<FileVM> previousVersions = _context.Files
-                .Find(x => x.Name == name && !x.IsCurrent)
+                .Find(x => x.Name.Equals(name) && !x.IsCurrent)
                 .ToList()
                 .Select(f => new FileVM
                 {
