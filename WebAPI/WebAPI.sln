@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{43D28FBE-1CAC-49F3-B468-C0688D42E7AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderWatcherService", "FolderWatcherService\FolderWatcherService.csproj", "{5A3A2D2E-82CC-4110-BCD6-20B8E92EE11E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FolderWatcherService", "FolderWatcherService\FolderWatcherService.csproj", "{5A3A2D2E-82CC-4110-BCD6-20B8E92EE11E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsApp", "WinFormsApp\WinFormsApp.csproj", "{3C1FD48C-13AA-4BDD-BB10-01A804F60E7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5A3A2D2E-82CC-4110-BCD6-20B8E92EE11E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A3A2D2E-82CC-4110-BCD6-20B8E92EE11E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A3A2D2E-82CC-4110-BCD6-20B8E92EE11E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C1FD48C-13AA-4BDD-BB10-01A804F60E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C1FD48C-13AA-4BDD-BB10-01A804F60E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C1FD48C-13AA-4BDD-BB10-01A804F60E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C1FD48C-13AA-4BDD-BB10-01A804F60E7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
