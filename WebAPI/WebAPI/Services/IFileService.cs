@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using WebAPI.ViewModels;
+using WebAPI.ViewModels.ServiceConnection;
 using File = WebAPI.Models.File;
 
 namespace WebAPI.Services
@@ -21,5 +22,6 @@ namespace WebAPI.Services
         void DeleteFileFromService(FileDeleteParameterVM file);
 
         FileParameterVM GetFileToService(string fileId);
+        List<FileParameterVM> SynchronizeDirectory();
     }
 }

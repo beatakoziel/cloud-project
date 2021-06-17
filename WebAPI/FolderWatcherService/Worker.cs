@@ -13,18 +13,39 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace FolderWatcherService
 {
+    public class WebSocketHandler : WebSocketBehavior
+    {
+        protected override void OnMessage(MessageEventArgs e)
+        {
+            Console.WriteLine($"Incoming file ID -> {e.Data}");
+            //Send(e.Data);
+            Program.GetFileFromServer(e.Data);
+        }
+    }
+    [Obsolete]
     public class Worker : BackgroundService
     {
         private readonly ILogger<Worker> _logger;
         public FileSystemWatcher watcher;
         static public HttpClient httpClient;
+        private static WebSocketServer _webSocket;
 
         public Worker(ILogger<Worker> logger)
         {
             _logger = logger;
+            InitWebSocketServer();
+        }
+        private static void InitWebSocketServer()
+        {
+            _webSocket = new WebSocketServer("ws://127.0.0.1:7891");
+            _webSocket.AddWebSocketService<WebSocketHandler>("/FileAdded");
+            _webSocket.Start();
+            Console.WriteLine("Web socket started");
         }
         public static byte[] GetFileContent(string fileName)
         {
@@ -117,8 +138,8 @@ namespace FolderWatcherService
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-                await Task.Delay(60 * 1000, stoppingToken);
+                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                await Task.Delay(3 * 1000, stoppingToken);
             }
         }
     }

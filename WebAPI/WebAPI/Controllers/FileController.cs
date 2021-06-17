@@ -87,5 +87,11 @@ namespace WebAPI.Controllers
             var data = fileService.GetFileToService(fileId);
             return Ok(data);
         }
+        [HttpGet("service/synchronize")]
+        public ActionResult SychnronizeDirectory()
+        {
+            var data = fileService.SynchronizeDirectory();
+            return Ok(data);
+        }
     }
 }

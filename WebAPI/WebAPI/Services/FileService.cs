@@ -10,6 +10,11 @@ using Microsoft.AspNetCore.Http;
 using WebAPI.Repositories;
 using WebAPI.ViewModels;
 using File = WebAPI.Models.File;
+using WebSocketSharp;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
+using WebAPI.ViewModels.ServiceConnection;
 
 namespace WebAPI.Services
 {
@@ -17,13 +22,35 @@ namespace WebAPI.Services
     {
         private readonly IFileRepository fileRepository;
         private readonly IDirectoryRepository directoryRepository;
+        private static WebSocket _webSocket; 
 
         public FileService(IFileRepository fileRepository, IDirectoryRepository directoryRepository)
         {
             this.fileRepository = fileRepository;
             this.directoryRepository = directoryRepository;
+            //InitWebSocket();
         }
+        //private static void InitWebSocket()
+        //{
+        //    _webSocket = new WebSocket("ws://127.0.0.1:7070/FileAdded");
+        //    //_webSocket.OnMessage += WebSocketOnMessage;
+        //    _webSocket.Connect();
+        //}
+        private static void SendFileIdToService(string fileId)
+        {
+            using (WebSocket webSocket = new WebSocket("ws://127.0.0.1:4649/FileAdded"))
+            {
+                webSocket.Connect();
+                bool ping = webSocket.Ping();
+                webSocket.Send(fileId);
+            }
 
+
+        }
+        //private static void WebSocketOnMessage(object sender, MessageEventArgs e)
+        //{
+
+        //}
         public List<FileVM> GetAllFiles()
         {
             return fileRepository.GetAllFiles();
@@ -82,7 +109,7 @@ namespace WebAPI.Services
                 }
             }
 
-            SendSignalToService(newFile.Id);
+            SendFileIdToService(newFile.Id);
         }
 
 
@@ -143,10 +170,7 @@ namespace WebAPI.Services
                 file.Name = file.Name.Remove(0, lastSlashPos);
             }
 
-            if (file.Directory.Equals("C:\\CloudProject"))
-            {
-                file.Directory = "";
-            }
+            file.Directory = dirName;
 
             List<Models.Directory> directories = directoryRepository.GetAllDirectories();
             string dirId;
@@ -238,17 +262,10 @@ namespace WebAPI.Services
 
             fileRepository.DeleteFileFromDirectory(file.Name, dirId);
         }
-        internal void SendSignalToService(string fileId)
-        {
-            Socket socket;
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-            int port = 8090;
-            IPEndPoint ipEndPoint = new IPEndPoint(ipAddress, port);
-            socket.Connect(ipEndPoint);
-            byte[] byteData = Encoding.ASCII.GetBytes(fileId.ToCharArray());
-            socket.Send(byteData, byteData.Length, 0);
-        }
+        //internal void SendSignalToService(string fileId)
+        //{
+            
+        //}
         public FileParameterVM GetFileToService(string fileId)
         {
             File file = fileRepository.GetFileById(fileId);
@@ -269,6 +286,30 @@ namespace WebAPI.Services
                 Directory = dirName
             };
             return result;
+        }
+        public List<FileParameterVM> SynchronizeDirectory()
+        {
+            List<FileParameterVM> resultFiles = new List<FileParameterVM>();
+            List<File> allFiles = fileRepository.GetAllCurrentFiles();
+            foreach(var item in allFiles)
+            {
+                string dirName = "";
+                if (!item.DirectoryId.Equals("0"))
+                {
+                    dirName = directoryRepository.GetCurrentDirName(item.DirectoryId);
+                }
+
+                byte[] bytes = System.IO.File.ReadAllBytes(item.Path);
+                FileParameterVM result = new FileParameterVM
+                {
+                    Name = item.Name,
+                    Type = item.ContentType,
+                    Source = bytes,
+                    Directory = dirName
+                };
+                resultFiles.Add(result);
+            }
+            return resultFiles;
         }
     }
 }

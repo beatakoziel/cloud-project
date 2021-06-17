@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WebSocketSharp;
 
 namespace WinFormsApp
 {
@@ -19,8 +21,12 @@ namespace WinFormsApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // fire whole files/dirs structure synchronization
-            throw new NotImplementedException();
+            using (WebSocket webSocket = new WebSocket("ws://127.0.0.1:4649/Synchronize"))
+            {
+                webSocket.Connect();
+                bool ping = webSocket.Ping();
+                webSocket.Send("1");
+            }
         }
 
         private void CloudProject_SizeChanged(object sender, EventArgs e)

@@ -13,78 +13,43 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using WebSocketSharp;
+using WebSocketSharp.Server;
 
 namespace FolderWatcherService
 {
+    [Obsolete]
     public class Program
     {
-        static TcpListener tcpListener;
-        static Socket socket;
-        static Thread readThread;
-        static Thread mainThread;
-        static public HttpClient httpClient;
-        static bool isWorking = true;
+        private static HttpClient _httpClient;
+        
         public static void Main(string[] args)
         {
-            
-            mainThread = new Thread(new ThreadStart(() =>
+            InitHttpClient();
+               
+            CreateHostBuilder(args).Build().Run();
+        }
+        
+        private static void InitHttpClient()
+        {
+            _httpClient = new HttpClient
             {
-                CreateHostBuilder(args).Build().Run();
-            }))
-            {
-                Name = " main thread ",
-                IsBackground = false
+                BaseAddress = new Uri("http://localhost:53033/files/")
             };
-            mainThread.Start();
-            StartListeningForSignals();
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseWindowsService()
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<Worker>();
                 });
-
-        static void StartListeningForSignals()
+        public static async Task GetFileFromServer(string receivedFileId)
         {
-            tcpListener = new TcpListener(IPAddress.Parse("127.0.0.1"), 8090);
-            tcpListener.Start();
-            socket = tcpListener.AcceptSocket();
-
-            readThread = new Thread(new ThreadStart(ReceiveMessage))
-            {
-                Name = "Thread listening for signals about new file to download",
-                IsBackground = false
-            };
-            readThread.Start();
-        }
-        static async void ReceiveMessage()
-        {
-            try
-            {
-                while (isWorking)
-                {
-                    byte[] receivedBytes = new byte[100];
-                    _ = socket.Receive(receivedBytes, receivedBytes.Length, 0);
-                    string receivedFileId = Encoding.ASCII.GetString(receivedBytes);
-                    receivedFileId = receivedFileId.Substring(0, 24);
-                    await GetFileFromServer(receivedFileId);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-        }
-        static async Task GetFileFromServer(string receivedFileId)
-        {
-            httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://localhost:53033/files/");
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(
-                new MediaTypeWithQualityHeaderValue("application/json"));
-
             FileIdParameterVM fileIdParameterVM = new FileIdParameterVM
             {
                 Id = receivedFileId
@@ -92,29 +57,22 @@ namespace FolderWatcherService
 
             FileParameterVM fileResponse = new FileParameterVM();
 
-            var response = await httpClient.GetAsync("service/getFileToService/" + receivedFileId);
+            var response = await _httpClient.GetAsync("service/getFileToService/" + receivedFileId);
 
-            if(response != null)
+            if (response != null)
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
                 fileResponse = JsonConvert.DeserializeObject<FileParameterVM>(jsonString);
             }
 
             AddFileToDirectory(fileResponse);
-
-            //fileParameter.Name = response.GetType().GetProperties().First(x => x.Name.Equals("Name")).GetValue(response, null).ToString();
-            //fileParameter.Type = response.GetType().GetProperties().First(x => x.Name.Equals("Type")).GetValue(response, null).ToString();
-            //fileParameter.Directory = response.GetType().GetProperties().First(x => x.Name.Equals("Directory")).GetValue(response, null).ToString();
-            //fileParameter.Source = (byte[])response.GetType().GetProperties().First(x => x.Name.Equals("Source")).GetValue(response, null);
-
-
         }
         static void AddFileToDirectory(FileParameterVM file)
         {
             string path;
-            if(file.Directory.Equals(""))
+            if (!file.Directory.Equals(""))
             {
-                if(!Directory.Exists(@"C:\CloudProject\" + file.Directory))
+                if (!Directory.Exists(@"C:\CloudProject\" + file.Directory))
                 {
                     Directory.CreateDirectory(@"C:\CloudProject\" + file.Directory);
                 }

@@ -118,5 +118,9 @@ namespace WebAPI.Repositories
         {
             _context.Files.DeleteOne(x => x.Name.Equals(fileName) && x.DirectoryId.Equals(dirId));
         }
+        public List<File> GetAllCurrentFiles()
+        {
+            return _context.Files.Find(x => x.IsCurrent == true).ToList();
+        }
     }
 }
